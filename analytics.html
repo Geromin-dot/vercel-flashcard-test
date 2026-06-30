@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iFocus | Analytics Dashboard</title>
+    <meta name="description" content="iFocus Interactive Analytics — distraction heatmap, emotional trendline, and focus correlations.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="app-container wide">
+        <header>
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="12" cy="12" r="4" fill="currentColor"/>
+                    <line x1="12" y1="2" x2="12" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="12" y1="18" x2="12" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="2" y1="12" x2="6" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="18" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <h1><span class="logo-accent">i</span>Focus</h1>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="command-center.html">Home</a>
+                <a href="index.html">Flashcards</a>
+                <a href="analytics.html" class="active">Analytics</a>
+                <a href="coach.html">AI Coach</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="margin-bottom: 1.5rem;">
+                <h2 style="font-size: 2rem;">📊 Weekly Analytics Dashboard</h2>
+                <p class="subtitle" style="margin-bottom: 0;">Hover over charts to see exact correlations between stress spikes and focus hours.</p>
+            </div>
+
+            <!-- Stat Cards -->
+            <div class="analytics-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalFocusHours">12.5</div>
+                    <div class="stat-label">Focus Hours</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: var(--success);" id="tasksCompleted">23</div>
+                    <div class="stat-label">Tasks Done</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: var(--warning);" id="avgDistractions">3.2</div>
+                    <div class="stat-label">Avg Distractions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: var(--secondary-accent);" id="streakDays">5</div>
+                    <div class="stat-label">Day Streak</div>
+                </div>
+            </div>
+
+            <!-- Charts Row 1: Focus & Emotional Trendline -->
+            <div class="charts-row">
+                <div class="glass-panel">
+                    <h3 style="margin-bottom: 1rem;">Focus Hours (Weekly)</h3>
+                    <div class="chart-container">
+                        <canvas id="focusChart"></canvas>
+                    </div>
+                </div>
+                <div class="glass-panel">
+                    <h3 style="margin-bottom: 1rem;">Emotional Trendline</h3>
+                    <div class="chart-container">
+                        <canvas id="emotionalChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row 2: Distraction Heatmap & Session Distribution -->
+            <div class="charts-row" style="margin-top: 2rem;">
+                <div class="glass-panel">
+                    <h3 style="margin-bottom: 1rem;">Distraction Heatmap</h3>
+                    <div class="chart-container">
+                        <canvas id="distractionChart"></canvas>
+                    </div>
+                </div>
+                <div class="glass-panel">
+                    <h3 style="margin-bottom: 1rem;">Study Session Types</h3>
+                    <div class="chart-container">
+                        <canvas id="sessionTypeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="analytics.js"></script>
+</body>
+</html>

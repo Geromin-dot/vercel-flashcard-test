@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iFocus | Home</title>
+    <meta name="description" content="iFocus Desktop Command Center — organize your study tasks with cloud-synced to-do lists.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="app-container wide">
+        <header>
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="12" cy="12" r="4" fill="currentColor"/>
+                    <line x1="12" y1="2" x2="12" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="12" y1="18" x2="12" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="2" y1="12" x2="6" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="18" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <h1><span class="logo-accent">i</span>Focus</h1>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="command-center.html" class="active">Home</a>
+                <a href="index.html">Flashcards</a>
+                <a href="analytics.html">Analytics</a>
+                <a href="coach.html">AI Coach</a>
+            </nav>
+        </header>
+
+        <main class="command-center-layout">
+            <!-- Column 1: Task Command Center -->
+            <div class="glass-panel" style="display: flex; flex-direction: column; height: 100%;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <h2>To-Do List</h2>
+                    <div class="sync-badge">
+                        <span class="dot"></span>
+                        Cloud Synced
+                    </div>
+                </div>
+                <p class="subtitle" style="margin-bottom: 1.5rem;">Organize complex to-do lists. Drag to reorder. Everything syncs across devices.</p>
+                
+                <div class="todo-input-row" style="flex-wrap: wrap;">
+                    <input type="text" id="todoInput" placeholder="What needs to be done?" style="height: 48px; box-sizing: border-box; min-width: 200px;">
+                    <div style="display: flex; gap: 0.5rem; flex: 1;">
+                        <select id="todoPriority" style="min-width: max-content; height: 48px; box-sizing: border-box;">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Med</option>
+                            <option value="high">High</option>
+                        </select>
+                        <button id="addTodoBtn" class="btn-primary" style="flex: 1; padding: 0 1rem; margin-top: 0; height: 48px; box-sizing: border-box; border-radius: var(--radius-sm);">+ Add</button>
+                    </div>
+                </div>
+
+                <div class="todo-list" id="todoList" style="flex: 1; min-height: 300px;">
+                    <!-- Tasks will be injected by JS -->
+                </div>
+
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-top: 1.5rem;">
+                    <button id="clearCompletedBtn" class="btn-secondary small" style="opacity: 0.7;">Clear Completed</button>
+                    <div style="display: flex; gap: 0.25rem;">
+                        <button class="filter-btn btn-secondary small active" data-filter="all">All</button>
+                        <button class="filter-btn btn-secondary small" data-filter="active">Active</button>
+                        <button class="filter-btn btn-secondary small" data-filter="completed">Done</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 2: Timer & Audio -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <!-- Timer -->
+                <div class="glass-panel" style="text-align: center;">
+                    <h2 style="margin-bottom: 0.25rem;">Pomodoro Timer</h2>
+                    <p class="subtitle" style="margin-bottom: 1.5rem;">Leave your phone. Focus here.</p>
+
+                    <div class="timer-circle" id="timerCircle">
+                        <div class="timer-inner">
+                            <div class="timer-display" id="timerDisplay">25:00</div>
+                            <div class="timer-label" id="timerLabel">Focus Time</div>
+                        </div>
+                    </div>
+
+                    <div class="timer-controls">
+                        <button id="startTimerBtn" class="btn-primary">Start</button>
+                        <button id="resetTimerBtn" class="btn-secondary">Reset</button>
+                    </div>
+
+                    <div class="pomodoro-settings" style="justify-content: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                        <button class="pomodoro-preset active" data-work="25" data-break="5">25/5</button>
+                        <button class="pomodoro-preset" data-work="50" data-break="10">50/10</button>
+                        <button class="pomodoro-preset" data-work="15" data-break="3">15/3</button>
+                        <button class="pomodoro-preset" data-work="90" data-break="20">90/20</button>
+                        <button class="pomodoro-preset" id="customPresetBtn">Custom</button>
+                    </div>
+
+                    <div class="session-counter">
+                        <span id="sessionLabel">Session 1 of 4</span>
+                        <div class="session-dots" id="sessionDots">
+                            <div class="session-dot current"></div>
+                            <div class="session-dot"></div>
+                            <div class="session-dot"></div>
+                            <div class="session-dot"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ambient Audio -->
+                <div class="glass-panel">
+                    <h2 style="margin-bottom: 0.25rem;">Ambient Audio</h2>
+                    <p class="subtitle" style="margin-bottom: 1.5rem;">Local music tracks.</p>                    
+                    
+                    <div class="audio-player">
+                        <audio id="localAudioPlayer" loop></audio>
+                        
+                        <div class="audio-tracks" id="audioTracks" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
+                            <div class="audio-track" data-src="music/Lofi Chill.mp3">
+                                <span class="track-name">Chill Lofi</span>
+                                <span class="track-status" style="font-size: 0.8rem; color: var(--text-secondary);">Play</span>
+                            </div>
+                            <div class="audio-track" data-src="music/Study Music.mp3">
+                                <span class="track-name">Study Music</span>
+                                <span class="track-status" style="font-size: 0.8rem; color: var(--text-secondary);">Play</span>
+                            </div>
+                            <div class="audio-track" data-src="music/rain.mp3">
+                                <span class="track-name">Rain Ambient</span>
+                                <span class="track-status" style="font-size: 0.8rem; color: var(--text-secondary);">Play</span>
+                            </div>
+                        </div>
+
+                        <div class="volume-control" style="display: flex; align-items: center; gap: 0.5rem;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon></svg>
+                            <input type="range" id="volumeSlider" min="0" max="100" value="50" style="flex: 1;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 3: Journal -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div class="glass-panel" style="flex: 1; display: flex; flex-direction: column;">
+                    <h2>Quick Reflection</h2>
+                    <p class="subtitle" style="margin-bottom: 1rem;">Clear your mind. AI will analyze your entry.</p>
+                    
+                    <textarea id="reflectionInput" class="journal-textarea" style="flex: 1; min-height: 150px; margin-bottom: 1rem;" placeholder="E.g., I have so much to read for biology and I keep getting distracted..."></textarea>
+                    
+                    <button id="analyzeBtn" class="btn-primary">
+                        <span class="btn-text">Submit & Analyze</span>
+                        <svg class="sparkle" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"></path><path d="M3 12h18"></path><path d="M19 5l-14 14"></path><path d="M5 5l14 14"></path></svg>
+                    </button>
+                </div>
+
+                <div class="glass-panel hidden" id="interventionSection">
+                    <h2>AI Insight</h2>
+                    <div id="interventionContent" class="intervention-card" style="font-size: 0.95rem;">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+
+                <div class="glass-panel" style="flex: 1; display: flex; flex-direction: column;">
+                    <h2 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Past Entries</h2>
+                    <div class="journal-history" id="journalHistory" style="flex: 1; min-height: 150px; max-height: 250px; overflow-y: auto;">
+                        <div class="empty-state" style="padding: 1rem;">
+                            <p>No journal entries yet.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Custom Timer Modal -->
+    <div id="customTimerModal" class="modal-overlay hidden">
+        <div class="glass-panel modal-content" style="max-width: 500px;">
+            <h2>Custom Timer Settings</h2>
+            <p class="subtitle" style="margin-bottom: 1rem;">Set custom durations and number of sessions.</p>
+            
+            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                <div style="flex: 1;">
+                    <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">Work Time</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="number" id="customWorkMin" min="0" max="120" value="45" placeholder="Min" style="width: 100%;">
+                        <input type="number" id="customWorkSec" min="0" max="59" value="0" placeholder="Sec" style="width: 100%;">
+                    </div>
+                </div>
+                <div style="flex: 1;">
+                    <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">Break Time</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="number" id="customBreakMin" min="0" max="60" value="15" placeholder="Min" style="width: 100%;">
+                        <input type="number" id="customBreakSec" min="0" max="59" value="0" placeholder="Sec" style="width: 100%;">
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">Total Sessions</label>
+                <input type="number" id="customSessionsInput" min="1" max="10" value="4" style="width: 100%;">
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+                <button id="cancelCustomBtn" class="btn-secondary small">Cancel</button>
+                <button id="saveCustomBtn" class="btn-primary small" style="padding: 0.5rem 1.25rem;">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Modal -->
+    <div id="alertModal" class="modal-overlay hidden">
+        <div class="glass-panel modal-content" style="text-align: center; max-width: 350px;">
+            <h2 id="alertModalTitle" style="margin-bottom: 0.5rem;">Time's Up!</h2>
+            <p id="alertModalMessage" class="subtitle" style="margin-bottom: 1.5rem;">Session completed.</p>
+            <button id="alertModalBtn" class="btn-primary" style="width: 100%;">Continue</button>
+        </div>
+    </div>
+
+    <script src="command-center.js"></script>
+    <script src="focus.js"></script>
+    <script src="sentiment.js"></script>
+</body>
+</html>

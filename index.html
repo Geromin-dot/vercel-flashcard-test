@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Flash Cards | Auto-Deck Generator</title>
-    <link rel="stylesheet" href="style.css?v=3">
+    <title>iFocus | Smart Flash Cards</title>
+    <meta name="description" content="iFocus AI Auto-Deck Generator — paste notes or upload PDFs to generate custom flashcard decks.">
+    <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -24,24 +25,55 @@
         <header>
             <div class="logo">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 19V5C4 3.89543 4.89543 3 6 3H19.4C19.8319 3 20.1066 3.44754 19.9238 3.8443L18 8L19.9238 12.1557C20.1066 12.5525 19.8319 13 19.4 13H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M6 13V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="12" cy="12" r="4" fill="currentColor"/>
+                    <line x1="12" y1="2" x2="12" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="12" y1="18" x2="12" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="2" y1="12" x2="6" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="18" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                 </svg>
-                <h1>Smart Study AI</h1>
+                <h1><span class="logo-accent">i</span>Focus</h1>
             </div>
             
             <nav class="nav-links">
+                <a href="command-center.html">Home</a>
                 <a href="index.html" class="active">Flashcards</a>
-                <a href="sentiment.html">Focus & Sentiment</a>
+                <a href="analytics.html">Analytics</a>
                 <a href="coach.html">AI Coach</a>
             </nav>
         </header>
 
         <main>
-            <div class="input-section glass-panel" id="inputSection">
-                <h2>Create Auto-Deck</h2>
+            <!-- Collections View -->
+            <div id="collectionsSection" class="glass-panel">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h2>My Flashcard Collections</h2>
+                        <p class="subtitle" style="margin-bottom: 0;">Select a deck to review, or create a new one.</p>
+                    </div>
+                    <button id="showCreateBtn" class="btn-primary" style="padding: 0.6rem 1.25rem; margin-top: 0;">
+                        + Create New Deck
+                    </button>
+                </div>
+
+                <div class="collections-grid" id="collectionsGrid">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+
+            <!-- Create Deck View -->
+            <div class="input-section glass-panel hidden" id="inputSection">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <h2>Create Auto-Deck</h2>
+                    <button id="backToCollectionsBtn" class="btn-secondary small">← Collections</button>
+                </div>
                 <p class="subtitle">Paste your notes or upload a syllabus to generate flashcards instantly.</p>
                 
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary);">Deck Name</label>
+                    <input type="text" id="deckNameInput" placeholder="e.g. Biology Chapter 4" style="width: 100%; background: var(--bg-surface); border: 1px solid var(--glass-border); border-radius: 8px; padding: 0.75rem 1rem; color: var(--text-primary); font-size: 1rem;">
+                </div>
+
                 <div class="tabs">
                     <button class="tab active" data-target="text-input">Text / Notes</button>
                     <button class="tab" data-target="file-input">PDF Document</button>
@@ -77,8 +109,11 @@
 
             <div class="deck-section hidden" id="deckSection">
                 <div class="deck-header">
-                    <h2>Your Custom Deck</h2>
-                    <button id="newDeckBtn" class="btn-secondary small">Create Another</button>
+                    <h2 id="activeDeckTitle">Your Custom Deck</h2>
+                    <div style="display: flex; gap: 0.75rem;">
+                        <button id="saveDeckBtn" class="btn-secondary small" style="background: rgba(16, 185, 129, 0.15); border-color: var(--success); color: var(--success);">Save to Collections</button>
+                        <button id="newDeckBtn" class="btn-secondary small">Create Another</button>
+                    </div>
                 </div>
                 
                 <div class="flashcard-container" id="flashcardContainer">
@@ -100,6 +135,6 @@
         </main>
     </div>
 
-    <script src="script.js?v=12"></script>
+    <script src="script.js?v=20"></script>
 </body>
 </html>

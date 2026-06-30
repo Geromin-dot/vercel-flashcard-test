@@ -8,6 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const notesArea = document.getElementById('notesArea');
     const generateBtn = document.getElementById('generateBtn');
     
+    const collectionsSection = document.getElementById('collectionsSection');
+    const collectionsGrid = document.getElementById('collectionsGrid');
+    const showCreateBtn = document.getElementById('showCreateBtn');
+    const backToCollectionsBtn = document.getElementById('backToCollectionsBtn');
     const inputSection = document.getElementById('inputSection');
     const loadingSection = document.getElementById('loadingSection');
     const deckSection = document.getElementById('deckSection');
@@ -19,11 +23,113 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextCardBtn = document.getElementById('nextCardBtn');
     const cardCounter = document.getElementById('cardCounter');
     const newDeckBtn = document.getElementById('newDeckBtn');
+    const saveDeckBtn = document.getElementById('saveDeckBtn');
+    const deckNameInput = document.getElementById('deckNameInput');
+    const activeDeckTitle = document.getElementById('activeDeckTitle');
 
     // State
     let extractedText = "";
     let currentCards = [];
     let currentCardIndex = 0;
+    let currentDeckSaved = false;
+
+    // ===== Collections Management =====
+    function getCollections() {
+        const stored = localStorage.getItem('ifocus_flashcard_collections');
+        return stored ? JSON.parse(stored) : [];
+    }
+
+    function saveCollections(collections) {
+        localStorage.setItem('ifocus_flashcard_collections', JSON.stringify(collections));
+    }
+
+    function renderCollections() {
+        const collections = getCollections();
+
+        if (collections.length === 0) {
+            collectionsGrid.innerHTML = `
+                <div class="empty-state" style="grid-column: 1 / -1;">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                    <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">No collections yet</p>
+                    <p>Generate your first flashcard deck to get started!</p>
+                </div>
+            `;
+            return;
+        }
+
+        collectionsGrid.innerHTML = collections.map((col, idx) => `
+            <div class="collection-card" data-index="${idx}">
+                <button class="delete-collection" data-index="${idx}" title="Delete collection">&times;</button>
+                <h4>${col.name}</h4>
+                <span class="card-count">${col.cards.length} card${col.cards.length !== 1 ? 's' : ''}</span>
+                <p class="collection-date">${new Date(col.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+            </div>
+        `).join('');
+
+        // Attach click events to open a collection
+        collectionsGrid.querySelectorAll('.collection-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('.delete-collection')) return;
+                const idx = Number(card.dataset.index);
+                openCollection(idx);
+            });
+        });
+
+        // Attach delete events
+        collectionsGrid.querySelectorAll('.delete-collection').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const idx = Number(btn.dataset.index);
+                const collections = getCollections();
+                if (confirm(`Delete "${collections[idx].name}"?`)) {
+                    collections.splice(idx, 1);
+                    saveCollections(collections);
+                    renderCollections();
+                }
+            });
+        });
+    }
+
+    function openCollection(index) {
+        const collections = getCollections();
+        const col = collections[index];
+        if (!col) return;
+
+        currentCards = col.cards;
+        currentDeckSaved = true;
+        activeDeckTitle.textContent = col.name;
+        saveDeckBtn.style.display = 'none';
+        
+        collectionsSection.classList.add('hidden');
+        inputSection.classList.add('hidden');
+        deckSection.classList.remove('hidden');
+        initDeck();
+    }
+
+    function showCollections() {
+        collectionsSection.classList.remove('hidden');
+        inputSection.classList.add('hidden');
+        deckSection.classList.add('hidden');
+        loadingSection.classList.add('hidden');
+        renderCollections();
+    }
+
+    // ===== Navigation between views =====
+    showCreateBtn.addEventListener('click', () => {
+        collectionsSection.classList.add('hidden');
+        inputSection.classList.remove('hidden');
+        deckNameInput.value = '';
+        notesArea.value = '';
+        extractedText = '';
+        fileNameDisplay.textContent = '';
+        if (pdfUpload) pdfUpload.value = '';
+    });
+
+    backToCollectionsBtn.addEventListener('click', showCollections);
 
     // --- Tab Switching ---
     tabs.forEach(tab => {
@@ -75,6 +181,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         fileNameDisplay.textContent = `Selected: ${file.name}`;
         
+        // Auto-fill deck name from filename
+        if (!deckNameInput.value) {
+            deckNameInput.value = file.name.replace('.pdf', '');
+        }
+
         try {
             extractedText = await extractTextFromPDF(file);
             console.log("PDF Text Extracted, length:", extractedText.length);
@@ -146,9 +257,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             currentCards = await generateFlashcards(contentToProcess);
+            currentDeckSaved = false;
             clearInterval(progressInterval);
             progressFill.style.width = `100%`;
             
+            // Set deck title
+            const deckName = deckNameInput.value.trim() || 'Untitled Deck';
+            activeDeckTitle.textContent = deckName;
+            saveDeckBtn.style.display = '';
+
             setTimeout(() => {
                 loadingSection.classList.add('hidden');
                 deckSection.classList.remove('hidden');
@@ -337,13 +454,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // ===== Save Deck to Collections =====
+    saveDeckBtn.addEventListener('click', () => {
+        if (currentDeckSaved) return;
+        const name = activeDeckTitle.textContent || 'Untitled Deck';
+        const collections = getCollections();
+        collections.unshift({
+            name: name,
+            cards: currentCards,
+            createdAt: new Date().toISOString(),
+        });
+        saveCollections(collections);
+        currentDeckSaved = true;
+        saveDeckBtn.textContent = 'Saved!';
+        saveDeckBtn.style.borderColor = 'var(--success)';
+        saveDeckBtn.style.color = 'var(--success)';
+        setTimeout(() => {
+            saveDeckBtn.innerHTML = 'Save to Collections';
+        }, 2000);
+    });
+
+    // ===== New Deck / Back =====
     newDeckBtn.addEventListener('click', () => {
-        deckSection.classList.add('hidden');
-        inputSection.classList.remove('hidden');
+        showCollections();
         progressFill.style.width = '0%';
         notesArea.value = '';
         extractedText = '';
         fileNameDisplay.textContent = '';
         pdfUpload.value = '';
     });
+
+    // ===== Initial render: show collections =====
+    renderCollections();
 });

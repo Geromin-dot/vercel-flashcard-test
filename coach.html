@@ -3,85 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Study AI | Motivational AI Coach</title>
+    <title>iFocus | Motivational AI Coach</title>
+    <meta name="description" content="iFocus AI Study Coach — personalized interventions based on your focus metrics.">
     <link rel="stylesheet" href="style.css">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        .coach-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .slider-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .slider-group label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-
-        .slider-group input[type="range"] {
-            width: 100%;
-            accent-color: var(--primary-accent);
-        }
-        
-        .val-display {
-            color: var(--primary-accent);
-            font-weight: 700;
-        }
-
-        .ai-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem auto;
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
-        }
-
-        .ai-response-box {
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-top: 1.5rem;
-            text-align: left;
-            min-height: 200px;
-        }
-
-        .metric-badge {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-        
-        .metric-badge.poor { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
-        .metric-badge.okay { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
-        .metric-badge.excellent { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
-
-        @media (max-width: 768px) {
-            .coach-container { grid-template-columns: 1fr; }
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="background-elements">
+    <div class="background-blobs">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
     </div>
@@ -90,22 +21,22 @@
         <header>
             <div class="logo">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 19V5C4 3.89543 4.89543 3 6 3H19.4C19.8319 3 20.1066 3.44754 19.9238 3.8443L18 8L19.9238 12.1557C20.1066 12.5525 19.8319 13 19.4 13H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M6 13V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="12" cy="12" r="4" fill="currentColor"/>
+                    <line x1="12" y1="2" x2="12" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="12" y1="18" x2="12" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="2" y1="12" x2="6" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="18" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                 </svg>
-                <h1>Smart Study AI</h1>
+                <h1><span class="logo-accent">i</span>Focus</h1>
             </div>
             
             <nav class="nav-links">
+                <a href="command-center.html">Home</a>
                 <a href="index.html">Flashcards</a>
-                <a href="sentiment.html">Focus & Sentiment</a>
+                <a href="analytics.html">Analytics</a>
                 <a href="coach.html" class="active">AI Coach</a>
             </nav>
-
-            <div class="settings">
-                <!-- Keep settings space empty for layout balance -->
-                <div style="width:40px"></div>
-            </div>
         </header>
 
         <main>
@@ -145,7 +76,7 @@
 
                     <div style="margin-top: 1.5rem; margin-bottom: 1rem;">
                         <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary);">Ask the Coach (Optional)</label>
-                        <textarea id="coachNote" placeholder="e.g. I struggled with math today, any tips?" style="width: 100%; height: 80px; padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: white; resize: none; font-family: inherit; font-size: 0.95rem;"></textarea>
+                        <textarea id="coachNote" placeholder="e.g. I struggled with math today, any tips?" style="width: 100%; height: 80px; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-surface); color: var(--text-primary); resize: none; font-family: inherit; font-size: 0.95rem;"></textarea>
                     </div>
 
                     <button id="coachBtn" class="btn-primary" style="margin-top: 1rem;">
