@@ -205,6 +205,52 @@
         </div>
     </div>
 
+    <!-- Break-Gate Modal -->
+    <div id="breakGateModal" class="modal-overlay hidden">
+        <div class="glass-panel modal-content" style="max-width: 500px; text-align: center;">
+            <h2 style="margin-bottom: 0.5rem; color: var(--primary-accent);">Break-Gate Ice Breaker!</h2>
+            <p class="subtitle" style="margin-bottom: 1.5rem;">Review these concepts to unlock your break.</p>
+            
+            <div id="bgNoDeckState" class="hidden" style="margin-bottom: 1.5rem;">
+                <p>No flashcard decks found. Create one in the Flashcards tab to enable Ice Breakers!</p>
+                <button id="bgSkipBtn" class="btn-primary" style="margin-top: 1rem;">Skip for Now</button>
+            </div>
+
+            <div id="bgQuizState" class="hidden">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; font-size: 0.9rem; color: var(--text-secondary);">
+                    <span id="bgDeckName">Deck Name</span>
+                    <span id="bgCardCounter">1 / 5</span>
+                </div>
+                
+                <div class="flashcard-container" style="min-height: 250px; margin-bottom: 1.5rem; position: relative;">
+                    <div class="flashcard" id="bgFlashcard">
+                        <div class="card-face card-front">
+                            <span class="tag" id="bgCardTag">Concept</span>
+                            <div class="card-content" id="bgCardFront">Question text here</div>
+                            <div class="flip-hint">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg>
+                                Click to flip
+                            </div>
+                        </div>
+                        <div class="card-face card-back">
+                            <div class="card-content" id="bgCardBack">Answer text here</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div id="bgRevealControls">
+                    <button id="bgRevealBtn" class="btn-primary" style="width: 100%;">Reveal Answer</button>
+                </div>
+                
+                <div id="bgResultControls" class="hidden" style="display: flex; gap: 1rem;">
+                    <button id="bgNeedReviewBtn" class="btn-secondary" style="flex: 1; border-color: var(--error); color: var(--error); background: rgba(239, 68, 68, 0.1);">Need Review</button>
+                    <button id="bgGotItBtn" class="btn-secondary" style="flex: 1; border-color: var(--success); color: var(--success); background: rgba(16, 185, 129, 0.1);">Got It!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Alert Modal -->
     <div id="alertModal" class="modal-overlay hidden">
         <div class="glass-panel modal-content" style="text-align: center; max-width: 350px;">

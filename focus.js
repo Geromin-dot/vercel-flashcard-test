@@ -107,13 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         window.removeEventListener('beforeunload', exitPromptHandler);
                     } else {
                         // Switch to break
-                        isBreak = true;
-                        timeLeft = breakDuration;
-                        totalTime = breakDuration;
-                        timerLabel.textContent = 'Break Time';
-                        timerCircle.style.setProperty('--progress', '0%');
-                        updateTimerDisplay();
-                        startTimer(); // auto-start break
+                        initBreakGate();
                     }
                 } else {
                     // Break completed
@@ -130,6 +124,145 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 1000);
     }
+
+    // ===== Break-Gate System (Pomodoro Ice Breakers) =====
+    const bgModal = document.getElementById('breakGateModal');
+    const bgNoDeckState = document.getElementById('bgNoDeckState');
+    const bgQuizState = document.getElementById('bgQuizState');
+    const bgSkipBtn = document.getElementById('bgSkipBtn');
+    
+    const bgDeckName = document.getElementById('bgDeckName');
+    const bgCardCounter = document.getElementById('bgCardCounter');
+    const bgFlashcard = document.getElementById('bgFlashcard');
+    const bgCardTag = document.getElementById('bgCardTag');
+    const bgCardFront = document.getElementById('bgCardFront');
+    const bgCardBack = document.getElementById('bgCardBack');
+    
+    const bgRevealControls = document.getElementById('bgRevealControls');
+    const bgRevealBtn = document.getElementById('bgRevealBtn');
+    const bgResultControls = document.getElementById('bgResultControls');
+    const bgNeedReviewBtn = document.getElementById('bgNeedReviewBtn');
+    const bgGotItBtn = document.getElementById('bgGotItBtn');
+    
+    let bgCurrentCards = [];
+    let bgCurrentIndex = 0;
+    
+    function startBreakSession() {
+        if (bgModal) bgModal.classList.add('hidden');
+        isBreak = true;
+        timeLeft = breakDuration;
+        totalTime = breakDuration;
+        timerLabel.textContent = 'Break Time';
+        timerCircle.style.setProperty('--progress', '0%');
+        updateTimerDisplay();
+        startTimer(); // auto-start break
+    }
+
+    function initBreakGate() {
+        if (!bgModal) {
+            startBreakSession();
+            return;
+        }
+        
+        bgModal.classList.remove('hidden');
+        
+        // Load collections
+        const stored = localStorage.getItem('ifocus_flashcard_collections');
+        const collections = stored ? JSON.parse(stored) : [];
+        
+        if (collections.length === 0 || !collections[0].cards || collections[0].cards.length === 0) {
+            bgNoDeckState.classList.remove('hidden');
+            bgQuizState.classList.add('hidden');
+            return;
+        }
+        
+        bgNoDeckState.classList.add('hidden');
+        bgQuizState.classList.remove('hidden');
+        
+        // Grab the most recent deck
+        const activeDeck = collections[0];
+        bgDeckName.textContent = activeDeck.name;
+        
+        // Sort cards: prioritize ones with 'needsReview' flag
+        let cards = [...activeDeck.cards];
+        cards.sort((a, b) => {
+            if (a.needsReview && !b.needsReview) return -1;
+            if (!a.needsReview && b.needsReview) return 1;
+            return 0;
+        });
+        
+        // Take up to 5 cards
+        bgCurrentCards = cards.slice(0, 5);
+        bgCurrentIndex = 0;
+        
+        renderBgCard();
+    }
+    
+    function renderBgCard() {
+        if (bgCurrentIndex >= bgCurrentCards.length) {
+            // Finished the quiz!
+            updateSpacedRepetition();
+            startBreakSession();
+            return;
+        }
+        
+        const card = bgCurrentCards[bgCurrentIndex];
+        bgCardCounter.textContent = `${bgCurrentIndex + 1} / ${bgCurrentCards.length}`;
+        bgCardTag.textContent = card.tag || 'Flashcard';
+        bgCardFront.textContent = card.front;
+        bgCardBack.textContent = card.back;
+        
+        bgFlashcard.classList.remove('flipped');
+        bgRevealControls.classList.remove('hidden');
+        bgResultControls.classList.add('hidden');
+    }
+    
+    function updateSpacedRepetition() {
+        const stored = localStorage.getItem('ifocus_flashcard_collections');
+        if (!stored) return;
+        const collections = JSON.parse(stored);
+        if (collections.length > 0) {
+            const activeDeck = collections[0];
+            bgCurrentCards.forEach(quizCard => {
+                const match = activeDeck.cards.find(c => c.front === quizCard.front && c.back === quizCard.back);
+                if (match) {
+                    match.needsReview = quizCard.needsReview;
+                }
+            });
+            localStorage.setItem('ifocus_flashcard_collections', JSON.stringify(collections));
+        }
+    }
+    
+    if (bgSkipBtn) bgSkipBtn.addEventListener('click', startBreakSession);
+    if (bgRevealBtn) {
+        bgRevealBtn.addEventListener('click', () => {
+            bgFlashcard.classList.add('flipped');
+            bgRevealControls.classList.add('hidden');
+            bgResultControls.classList.remove('hidden');
+        });
+    }
+    if (bgFlashcard) {
+        bgFlashcard.addEventListener('click', () => {
+            if (bgRevealControls && !bgRevealControls.classList.contains('hidden')) {
+                bgRevealBtn.click();
+            }
+        });
+    }
+    if (bgNeedReviewBtn) {
+        bgNeedReviewBtn.addEventListener('click', () => {
+            bgCurrentCards[bgCurrentIndex].needsReview = true;
+            bgCurrentIndex++;
+            renderBgCard();
+        });
+    }
+    if (bgGotItBtn) {
+        bgGotItBtn.addEventListener('click', () => {
+            bgCurrentCards[bgCurrentIndex].needsReview = false;
+            bgCurrentIndex++;
+            renderBgCard();
+        });
+    }
+    // ===== End Break-Gate System =====
 
     let audioCtx = null;
     function getAudioContext() {
